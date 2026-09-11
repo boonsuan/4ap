@@ -205,7 +205,8 @@ constructing more distant stages can be costly.
 - `rw` rewrites by an equality or equivalence. A `termination_by` declaration
   names the decreasing measure of a recursive definition or proof.
 - `#eval` runs an example. `#print axioms` inspects a theorem's logical
-  dependencies. The proof audit is in `FourAP/Audit.lean`.
+  dependencies. `FourAP/Audit.lean` checks the main theorem's statement and
+  enforces the permitted axiom list for the key results.
 
 Every theorem still passes through Lean's kernel, regardless of which tactics
 produce its proof. The mathematical content is in the statements, recursive

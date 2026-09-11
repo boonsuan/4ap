@@ -35,7 +35,7 @@ jobs:
           lint: true
           use-mathlib-cache: true
 
-      - name: Audit kernel dependencies
+      - name: Check theorem statement and axioms
         run: lake env lean FourAP/Audit.lean
 
       - name: Check Python documentation examples

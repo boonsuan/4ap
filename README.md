@@ -267,9 +267,9 @@ mathlib's standard syntax linters enabled; warnings fail the build. Copyright
 and license headers are checked against this project's MIT license.
 `lake lint` runs the mathematical declaration linters.
 
-[`FourAP/Audit.lean`](FourAP/Audit.lean) prints the logical dependencies of the
-main theorem, extension correctness, and numerical examples. They use only
-Lean's standard axioms:
+[`FourAP/Audit.lean`](FourAP/Audit.lean) checks a direct restatement of the main
+theorem using standard mathematical types. It also reports the axioms used by
+the key results and fails if any fall outside the permitted list:
 
 ```text
 [propext, Classical.choice, Quot.sound]

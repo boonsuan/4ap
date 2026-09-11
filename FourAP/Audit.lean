@@ -5,44 +5,68 @@ Authors: Boon Suan Ho
 -/
 import FourAP.Main
 import FourAP.Examples
+import Lean.Elab.Command
+import Lean.Util.CollectAxioms
 
 /-!
-# Kernel dependency audit
+# Theorem statement and kernel dependency audit
 
 This file makes the trust boundary of the paper's formalization inspectable.
-Run `lake env lean FourAP/Audit.lean` to print the axioms used by the semantic
-identification of the binary order, Lemma 1, Lemma 2, the final theorem, and
-the executable construction in the concluding remark. The numerical example
-is checked in Lean's kernel, so its audit includes no native-evaluation axiom.
+Run `lake env lean FourAP/Audit.lean` to check the main theorem's statement and
+the axioms used by the key results. An unexpected axiom is an error, so this
+command fails in CI as well as locally. The only permitted axioms are
+`propext`, `Classical.choice`, and `Quot.sound`.
+
+The statement below is deliberately written out using standard mathematical
+types, without any of the project's AP predicates. It checks that the main
+theorem still proves the paper's assertion, including negative differences.
+This file is a regression check and is not imported by the mathematical proofs.
 -/
 
+example : ∃ f : ℕ+ ≃ ℕ+, ∀ i j k l : ℕ+,
+    i < j → j < k → k < l → ∀ a r : ℤ, r ≠ 0 →
+    ¬ (((f i : ℕ) : ℤ) = a ∧ ((f j : ℕ) : ℤ) = a + r ∧
+       ((f k : ℕ) : ℤ) = a + 2 * r ∧ ((f l : ℕ) : ℤ) = a + 3 * r) :=
+  @FourAP.exists_fourAPFree_positive_permutation
+
+/-- Report a declaration's axioms and reject any outside the standard three.
+Name resolution also makes a missing or misspelled audit target an error. -/
+elab "check_standard_axioms " n:ident : command => do
+  let name ← Lean.Elab.Command.liftCoreM <| Lean.Elab.realizeGlobalConstNoOverloadWithInfo n
+  let axioms ← Lean.collectAxioms name
+  let permitted := #[``propext, ``Classical.choice, ``Quot.sound]
+  let unexpected := axioms.filter fun ax => !permitted.contains ax
+  unless unexpected.isEmpty do
+    throwError "{name} uses unexpected axioms: {unexpected.toList}"
+  Lean.logInfo m!"{name} depends on axioms: {axioms.toList}"
+
 -- The order defined before Lemma 1 is the paper's first-differing-bit order.
-#print axioms FourAP.bits_iff_first_differing_bit
+check_standard_axioms FourAP.bits_iff_first_differing_bit
 
 -- Lemma 1: reverse binary listings of finite sets are safe.
-#print axioms FourAP.safe_of_reverse_pairwise
+check_standard_axioms FourAP.safe_of_reverse_pairwise
 
 -- Lemma 2: every safe finite prefix has a safe extension covering any target.
-#print axioms FourAP.safe_extend
+check_standard_axioms FourAP.safe_extend
 
 -- The paper's main theorem, with positive indices, positive values, and
 -- arbitrary nonzero integer common differences.
-#print axioms FourAP.exists_fourAPFree_positive_permutation
+check_standard_axioms FourAP.exists_fourAPFree_positive_permutation
 
 -- The executable recursive extension satisfies all three conclusions of Lemma 2.
-#print axioms FourAP.extendAlgorithm_spec
+check_standard_axioms FourAP.extendAlgorithm_spec
 
 -- The computable union of singleton-target stages is the promised permutation.
-#print axioms FourAP.explicitPermutation_apFree
+check_standard_axioms FourAP.explicitPermutation_apFree
 
 -- The stage computation underlying the final remark is kernel checked.
-#print axioms FourAP.algorithmStage_nine_example
+check_standard_axioms FourAP.algorithmStage_nine_example
 
 -- The displayed prefix belongs to the actual infinite permutation.
-#print axioms FourAP.explicitPermutation_paper_prefix
+check_standard_axioms FourAP.explicitPermutation_paper_prefix
 
 -- The explicitly constructed positive permutation satisfies the full theorem.
-#print axioms FourAP.explicitPositivePermutation_apFree
+check_standard_axioms FourAP.explicitPositivePermutation_apFree
 
 -- Adding one gives the second displayed prefix in the final remark.
-#print axioms FourAP.explicitPositiveSequence_paper_prefix
+check_standard_axioms FourAP.explicitPositiveSequence_paper_prefix
