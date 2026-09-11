@@ -8,7 +8,7 @@ import FourAP.Glue
 /-!
 # Lemma 2: the executable extension of a safe word
 
-This file formalizes the Extension Lemma in Boon Suan Ho's
+This file formalizes the Extension Lemma in the paper
 “A 4AP-free permutation of the positive integers”. The recursive function
 `extendAlgorithm` follows the choices in the paper's proof: extend the even
 part first, then extend the odd part to cover the required initial interval,

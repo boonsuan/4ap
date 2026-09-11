@@ -1,6 +1,6 @@
 # A 4AP-free permutation of the positive integers
 
-This repository formalizes Boon Suan Ho's paper *A 4AP-free permutation of the
+This repository formalizes the paper *A 4AP-free permutation of the
 positive integers* in **Lean 4 with mathlib**. It also provides a readable
 **Python implementation of the permutation and its inverse**.
 
@@ -149,10 +149,19 @@ p.value(11)       # 2063
 p.position(2063)  # 11: the inverse
 ```
 
-An instance keeps its growing prefix and a dictionary of inverse positions.
-Both queries stop as soon as the requested answer appears and reuse previous
-work. Iteration yields the infinite sequence; use a finite consumer such as
-`itertools.islice(p, 15)`.
+An instance keeps compact descriptions of its stages and caches queried
+forward and inverse answers. It stops at the first adequate stage without
+enumerating that entire stage. Iteration yields the infinite sequence; use a
+finite consumer such as `itertools.islice(p, 15)`.
+
+```python
+first_thousand = p.prefix(1000)
+term = Permutation().value(999)  # Does not compute the preceding 999 entries.
+assert Permutation().position(term) == 999  # Also works with an empty cache.
+```
+
+See [the implementation guide and benchmarks](PERFORMANCE.md) for the compact
+representation, its relationship to the proof, and performance limitations.
 
 `Permutation(positive=True)` adds one to every value:
 
@@ -182,12 +191,21 @@ new list and leaves its inputs unchanged. As in the lemma, its prefix must be
 a *safe word*. It validates natural-number entries and distinctness; it does
 not decide safety for arbitrary user input.
 
-This is the paper's construction, whose stages can grow very rapidly. A query
-for a small value can require a large stage, while a large value may already
-occur early. The code stops at the earliest adequate stage and caches its work,
-but is intended as a clear mathematical implementation, not a way to compute
-arbitrarily large requests cheaply. The Lean construction is formally proved;
-the Python port is tested against it, not itself formally verified.
+**Explicit extensions are size-guarded.** By default `extend` raises
+`OverflowError` if its result would exceed 100,000 entries, including the old
+prefix. It checks a lower bound while reading input values and computes the
+exact size compactly before enumerating appended output entries.
+For deliberately materialized results, pass a larger keyword-only
+`max_length`, or `max_length=None` to disable the configurable limit. Python's
+maximum list length is still enforced. The guard is an output-count limit,
+not a guarantee about runtime or memory; inputs and compact plans can also
+be expensive. Prefer `Permutation().prefix(n)` or `.value(k)` for canonical
+queries instead of explicitly expanding an entire stage.
+
+The paper's construction has rapidly growing stages. Compact representations
+make the first 1,000 terms practical, but more distant stages may themselves
+be costly to build. The construction is formally proved in Lean; the Python
+implementation is tested against it, not itself formally verified.
 
 ## Build and check
 

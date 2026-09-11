@@ -9,7 +9,7 @@ import Mathlib.Data.Nat.Bitwise
 /-!
 # The reverse binary order
 
-This file formalizes the order `◁` introduced before Lemma 1 in Boon Suan Ho's
+This file formalizes the order `◁` introduced before Lemma 1 in the paper
 “A 4AP-free permutation of the positive integers”.  The least significant
 unequal bit decides the comparison, with `1` preceding `0`.  Dividing by two
 removes a common least significant bit.  We use this recursive description

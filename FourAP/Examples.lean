@@ -8,7 +8,7 @@ import FourAP.Construction
 /-!
 # The numerical prefixes in the paper's remark
 
-This file verifies the two fifteen-term prefixes printed in Boon Suan Ho's
+This file verifies the two fifteen-term prefixes printed in the paper
 “A 4AP-free permutation of the positive integers”. Stage 9 is long enough to
 read all fifteen entries. The finite computation is checked by Lean's kernel;
 stabilization then identifies its output with the actual infinite permutations.

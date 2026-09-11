@@ -10,7 +10,7 @@ import Mathlib.Data.PNat.Basic
 /-!
 # The permutation of the positive integers
 
-This file formalizes the final proof and computability remark in Boon Suan Ho's
+This file formalizes the final proof and computability remark in the paper
 “A 4AP-free permutation of the positive integers”. Starting from the empty
 word, stage `n + 1` extends stage `n` with target `{n}`. These safe words give
 an explicit bijection of `ℕ`, proved 4AP-free by `permutationOfSafeStages_apFree`.

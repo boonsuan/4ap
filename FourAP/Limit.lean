@@ -11,7 +11,7 @@ import Mathlib.Logic.Equiv.Defs
 # A computable permutation from safe stages
 
 This file gives the effective version of the last proof and the computability
-remark in Boon Suan Ho's “A 4AP-free permutation of the positive integers”.
+remark in the paper “A 4AP-free permutation of the positive integers”.
 Given computable increasing safe words `P n` containing all integers below
 `n`, both directions of the resulting permutation are computable:
 

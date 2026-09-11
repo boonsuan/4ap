@@ -9,7 +9,7 @@ import FourAP.Construction
 # The theorem of the paper
 
 The declarations here assemble the preceding modules into the unconditional
-existence theorem of Boon Suan Ho's “A 4AP-free permutation of the positive
+existence theorem of the paper “A 4AP-free permutation of the positive
 integers”. For the closest match to the displayed theorem in the paper, see
 `exists_fourAPFree_positive_permutation`, which uses positive integers both
 as positions and as values, and an arbitrary nonzero integer difference.

@@ -9,7 +9,7 @@ import Mathlib.Data.List.Basic
 /-!
 # The language of the paper
 
-This file fixes the conventions used to formalize Boon Suan Ho's
+This file fixes the conventions used to formalize the paper
 “A 4AP-free permutation of the positive integers”.  The construction takes place
 in `ℕ`, which in Lean includes zero.  The final theorem shifts the values by one.
 

@@ -9,7 +9,7 @@ import FourAP.Splice
 /-!
 # Joining the odd and even extensions
 
-This file formalizes the middle part of the proof of Lemma 2 in Boon Suan Ho's
+This file formalizes the middle part of the proof of Lemma 2 in the paper
 “A 4AP-free permutation of the positive integers”: after extending the two
 parity words, put the new odd entries before the new even entries.
 

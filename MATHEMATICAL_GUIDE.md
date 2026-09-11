@@ -1,6 +1,6 @@
 # A mathematical guide to the formalization
 
-The source follows the proof of Boon Suan Ho's *A 4AP-free permutation of the
+The source follows the proof of the paper *A 4AP-free permutation of the
 positive integers*. This guide explains the small changes of language needed
 for Lean and suggests a reading order. It supplements the paper; it does not
 replace any proof with an informal argument.
@@ -165,21 +165,33 @@ evaluation, the reverse listing has an insertion-sort implementation proved
 equal to the mathematical reverse listing. This changes only how the sorted
 list is computed. The numerical proof uses `decide +kernel`.
 
-The Python function `extend` in `four_ap.py` follows the same recursion with
-ordinary lists and sets. Its variable names distinguish normalized parity
-prefixes from the rescaled suffixes `new_evens` and `new_odds`. It returns
-`prefix + new_odds + new_evens` exactly as in the paper.
+The Python function `_extend_suffix` in `four_ap.py` follows the same recursion
+using compact words. It computes normalized even and odd suffixes and records
+their rescaling and concatenation as `O E`; the old prefix is preserved
+separately. Forced target intervals are stored as endpoints rather than sets
+of all their integers. [PERFORMANCE.md](PERFORMANCE.md) explains the four word
+representations, parity-count lookup, and their relationship to the proof.
 
-`Permutation` stores the current word and a dictionary mapping its values to
-positions. A forward query advances until its position is present; an inverse
-query advances until its value is present. Only new entries are added to the
-inverse dictionary because old positions never move. The positive mode shifts
-values by one while keeping Python positions zero-based.
+`Permutation` stores compact descriptions of its stages and caches requested
+forward and inverse answers. A query advances until its answer is present,
+then uses block lengths or value parity to choose the relevant branches.
+It does not enumerate a whole stage. The positive mode shifts values
+by one while keeping Python positions zero-based.
 
-Tests compare entire Python stages and finite-target extensions with Lean's
-outputs. They check the port; the infinite correctness proof belongs to the
-Lean development. Stage sizes can grow rapidly, so caching prevents repeated
-work but does not make every query computationally cheap.
+The public `extend(prefix, targets)` returns a new explicit list and
+checks its output length before materialization. Its keyword-only
+`max_length` defaults to 100,000 total entries; excessive results raise
+`OverflowError`. The configurable limit can be raised or explicitly disabled
+with `None`, but Python's maximum list length remains enforced. This guards
+output size and bounds the number of distinct input values consumed, but it
+does not limit every possible cost of consuming inputs or building a plan.
+
+Tests compare entire small Python stages and finite-target extensions with
+Lean's outputs and check the compact implementation against a literal
+list/set implementation of the Extension Lemma. They also exercise large
+forward/inverse queries and size-guard failures. The infinite correctness
+proof is in Lean. Compact stages avoid enormous unrequested output, but
+constructing more distant stages can be costly.
 
 ## 9. A few Lean conventions
 
