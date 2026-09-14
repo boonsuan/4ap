@@ -4,8 +4,7 @@ This repository formalizes the paper *A 4AP-free permutation of the
 positive integers* in **Lean 4 with mathlib**. It also provides a readable
 **Python implementation of the permutation and its inverse**.
 
-**Paper on arXiv:** *link forthcoming.*
-<!-- TODO: Replace the placeholder above with the paper's arXiv link. -->
+**Paper on arXiv:** [arXiv:2609.12780](https://arxiv.org/abs/2609.12780).
 
 The formalization proves the binary-order properties, both lemmas, the main
 theorem, and the computability remark, including both displayed fifteen-term
