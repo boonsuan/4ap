@@ -9,8 +9,7 @@ positive integers* in **Lean 4 with mathlib**. It also provides a readable
 The formalization proves the binary-order properties, both lemmas, the main
 theorem, and the computability remark, including both displayed fifteen-term
 prefixes. The existence theorem uses the explicit computable permutation as its
-witness. Historical results cited in the introduction are background, not
-assumptions in the proof. The paper itself is not included in this repository.
+witness.
 
 ## Where to start
 
